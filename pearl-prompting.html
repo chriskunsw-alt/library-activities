@@ -1,0 +1,303 @@
+<div id="prl" style="font-family:Arial,Helvetica,sans-serif; max-width:100%; width:100%; color:#2b2333">
+<style>
+#prl *{box-sizing:border-box}
+#prl .bar{background:#312a3d;color:#fff;padding:14px 18px;font-size:19px;font-weight:bold;border-bottom:3px solid #e03a3a}
+#prl .bar small{display:block;font-size:12px;font-weight:normal;color:#c9c4d2;margin-top:3px}
+#prl .steps{display:flex;flex-wrap:wrap;gap:6px;padding:12px 18px;border-bottom:1px solid #ededed}
+#prl .steps button{font:inherit;font-size:14px;padding:7px 12px;border:1px solid #c9c9c9;background:#fff;border-radius:5px;cursor:pointer;color:#2b2333}
+#prl .steps button[aria-selected="true"]{background:#2b2333;color:#fff;border-color:#2b2333}
+#prl .steps button.done::after{content:" \2713";color:#0a7a4f}
+#prl .steps button[aria-selected="true"].done::after{color:#9fe0c2}
+#prl .panel{padding:22px 18px;display:none;max-width:860px}
+#prl .panel.on{display:block}
+#prl h2{font-size:22px;margin:0 0 8px}
+#prl h3{font-size:17px;margin:18px 0 6px}
+#prl p{font-size:15px;line-height:1.55;margin:0 0 12px;max-width:70ch}
+#prl .btn{font:inherit;font-size:15px;font-weight:bold;padding:9px 16px;border-radius:5px;border:2px solid #2b2333;background:#fff;color:#2b2333;cursor:pointer}
+#prl .btn:hover,#prl .btn.on{background:#2b2333;color:#fff}
+#prl .go{background:#0a7a4f;border-color:#0a7a4f;color:#fff}
+#prl .go:hover{background:#085f3d}
+#prl button:focus-visible,#prl input:focus-visible,#prl select:focus-visible,#prl textarea:focus-visible{outline:3px solid #0b63ce;outline-offset:2px}
+#prl .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#prl .fb{margin-top:12px;padding:10px 14px;border-left:4px solid #c9c9c9;background:#f6f5f8;font-size:15px;line-height:1.5}
+#prl .fb.ok{border-color:#0a7a4f;background:#eef8f3}
+#prl .fb.no{border-color:#e03a3a;background:#fdf0f0}
+#prl .fb:empty{display:none}
+#prl .letters{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+#prl .lt{width:64px;height:64px;font-size:34px;font-weight:bold;border-radius:8px;border:2px solid #2b2333;background:#fff;color:#2b2333;cursor:pointer;font-family:inherit}
+#prl .lt.on{background:#e03a3a;border-color:#e03a3a;color:#fff}
+#prl .lt.seen:not(.on){border-color:#0a7a4f;color:#0a7a4f}
+#prl .card{border:1px solid #c9c9c9;border-left:6px solid #e03a3a;border-radius:6px;padding:14px 16px;background:#fff;min-height:150px}
+#prl .card .nm{font-size:20px;font-weight:bold;margin-bottom:6px}
+#prl .card .ask{font-style:italic;margin:8px 0}
+#prl .card .eg{background:#fffdf0;padding:8px 10px;border-radius:4px;font-size:15px}
+#prl .cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:620px){#prl .cmp{grid-template-columns:1fr}}
+#prl .pbox{text-align:left;font-weight:normal;line-height:1.5;padding:12px 14px;border:2px solid #c9c9c9;border-radius:6px;background:#fff;cursor:pointer;font:inherit;font-size:15px;color:#2b2333}
+#prl .pbox:hover{border-color:#2b2333}
+#prl .tagrow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #ededed;flex-wrap:wrap}
+#prl .tagrow .seg{flex:1 1 320px;font-size:15px;line-height:1.5;padding-top:6px}
+#prl select,#prl input[type=text],#prl textarea{font:inherit;font-size:15px;padding:8px 10px;border:1px solid #c9c9c9;border-radius:5px;background:#fff}
+#prl select.ok{border-color:#0a7a4f;background:#eef8f3}
+#prl select.no{border-color:#e03a3a;background:#fdf0f0}
+#prl .field{margin:12px 0;padding:12px;border:1px solid #ededed;border-radius:6px}
+#prl .field label{display:block;font-weight:bold;margin-bottom:4px}
+#prl .field .hint{font-size:13px;color:#6b6475;margin-bottom:6px}
+#prl .field input[type=text],#prl .field textarea{width:100%}
+#prl .field .sugs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+#prl .sug{font:inherit;font-size:13px;padding:4px 10px;border-radius:14px;border:1px solid #c9c9c9;background:#f6f5f8;cursor:pointer;color:#2b2333}
+#prl .sug:hover{border-color:#2b2333}
+#prl .badge{display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:50%;background:#e03a3a;color:#fff;font-weight:bold;margin-right:6px}
+#prl .out{background:#2b2333;color:#fff;padding:14px;border-radius:6px;font-size:15px;line-height:1.55;white-space:pre-wrap;margin:8px 0;min-height:60px}
+#prl .meter{display:flex;gap:4px;margin:6px 0}
+#prl .meter span{flex:1;padding:5px 0;text-align:center;font-size:13px;font-weight:bold;border-radius:4px;background:#ededed;color:#8a8a8a}
+#prl .meter span.on{background:#0a7a4f;color:#fff}
+#prl .chk label{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.5;padding:8px 0;border-bottom:1px solid #ededed;cursor:pointer}
+#prl .chk input{width:18px;height:18px;margin-top:2px;flex:none}
+#prl .tool{border:1px solid #c9c9c9;border-radius:6px;padding:14px 16px;margin-top:8px;display:none}
+#prl .tool.on{display:block}
+#prl .tool ul{margin:6px 0 0;padding-left:18px;font-size:15px;line-height:1.55}
+#prl .note{border-top:1px solid #ededed;color:#8a8a8a;font-size:13px;font-style:italic;line-height:1.5;margin:10px 18px 18px;padding-top:10px}
+</style>
+
+<div class="bar">Prompting for research with PEARL<small>Write better prompts for AI research tools like scite.ai and Scopus AI</small></div>
+
+<div class="steps" role="tablist">
+<button role="tab" aria-selected="true" data-p="0">1. Meet PEARL</button>
+<button role="tab" aria-selected="false" data-p="1">2. Compare prompts</button>
+<button role="tab" aria-selected="false" data-p="2">3. Label a prompt</button>
+<button role="tab" aria-selected="false" data-p="3">4. Build your prompt</button>
+<button role="tab" aria-selected="false" data-p="4">5. Check the answer</button>
+</div>
+
+<!-- 1 -->
+<div class="panel on" role="tabpanel">
+<h2>Five parts of a strong research prompt</h2>
+<p>AI research tools work best when you tell them exactly what you need. Select each letter to see what it means.</p>
+<div class="letters" id="prl-letters"></div>
+<div class="card" id="prl-card" aria-live="polite"><p style="margin:0">Select a letter above to start.</p></div>
+</div>
+
+<!-- 2 -->
+<div class="panel" role="tabpanel">
+<h2>Which prompt will get a better answer?</h2>
+<p>You are researching how social media affects teenagers' sleep. Select the prompt you would use.</p>
+<div class="cmp">
+<button class="pbox" data-ok="0">social media sleep</button>
+<button class="pbox" data-ok="1">Summarise what peer-reviewed research says about how social media use affects sleep in teenagers. Write for a first-year university student. Include studies published from 2018 onwards.</button>
+</div>
+<div class="fb" id="prl-cmpfb"></div>
+</div>
+
+<!-- 3 -->
+<div class="panel" role="tabpanel">
+<h2>Label each part of the prompt</h2>
+<p>Choose which PEARL part each line of this prompt covers. Each box turns green when it is right.</p>
+<div id="prl-tags"></div>
+<div class="row" style="margin-top:12px"><button class="btn go" id="prl-tagchk">Check my answers</button><button class="btn" id="prl-tagshow">Show answers</button></div>
+<div class="fb" id="prl-tagfb"></div>
+</div>
+
+<!-- 4 -->
+<div class="panel" role="tabpanel">
+<h2>Build your own prompt</h2>
+<p>Use your own assessment topic. Type in each box, or select a suggestion to add it. Your prompt builds below as you go.</p>
+<div id="prl-fields"></div>
+<h3>Your prompt</h3>
+<div class="meter" id="prl-meter"></div>
+<div class="out" id="prl-out" aria-live="polite">Start typing in the boxes above.</div>
+<div class="row"><button class="btn go" id="prl-copy">Copy prompt</button><button class="btn" id="prl-ex">Load an example</button><button class="btn" id="prl-clr">Clear all</button><span id="prl-cmsg" style="font-size:14px"></span></div>
+<div class="fb" id="prl-buildfb"></div>
+</div>
+
+<!-- 5 -->
+<div class="panel" role="tabpanel">
+<h2>Check the answer before you use it</h2>
+<p>AI tools can misread a source or summarise it poorly. Before you use anything, work through this checklist.</p>
+<div class="chk" id="prl-chk"></div>
+<div class="fb" id="prl-chkfb"></div>
+<h3>Tool tips</h3>
+<div class="row"><button class="btn on" data-t="0">scite.ai</button><button class="btn" data-t="1">Scopus AI</button></div>
+<div class="tool on">
+<ul>
+<li>scite.ai answers questions using research articles and lists its references.</li>
+<li>Its Smart Citations show whether later papers support, contrast or simply mention a finding. Use this to see if a claim is disputed.</li>
+<li>Ask a follow-up for the "Look again" step, for example: which studies disagree with this?</li>
+</ul>
+</div>
+<div class="tool">
+<ul>
+<li>Scopus AI, from Elsevier, summarises answers from research indexed in Scopus and lists the references it drew on.</li>
+<li>Its answers are only as wide as Scopus coverage, so search other databases too.</li>
+<li>Open each reference in Scopus and read the abstract or full text before you cite it.</li>
+</ul>
+</div>
+<p style="margin-top:12px">Check whether you have access through the Library, and follow your course rules on using AI in assessments.</p>
+</div>
+
+<p class="note">Examples in this activity are written for teaching. Tool features change, so check each tool's help pages.</p>
+
+<script>
+(function(){
+/* Edit PEARL wording here. Everything else reads from this block. */
+var PEARL=[
+{k:'P',name:'Purpose',what:'What you want the tool to do.',ask:'Do I want a summary, a comparison, key debates, or a list of studies?',eg:'Summarise what peer-reviewed research says...',hint:'Start with an action word: summarise, compare, identify, explain.',sugs:['Summarise what peer-reviewed research says','Compare the main findings of recent studies','Identify the key debates in research']},
+{k:'E',name:'Elements',what:'The key concepts of your topic, and any other words for them.',ask:'What are the two or three main ideas, and what else might authors call them?',eg:'...about how social media use affects sleep in teenagers (adolescents).',hint:'Name your main concepts. Add synonyms in brackets.',sugs:[]},
+{k:'A',name:'Audience',what:'Who the answer is for and how detailed it should be.',ask:'What level should this be written at?',eg:'Write for a first-year university student.',hint:'Say who will read it.',sugs:['Write for a first-year university student','Use plain English and define key terms','Keep the answer under 300 words']},
+{k:'R',name:'Range',what:'The limits of your search: dates, places, types of study or sources.',ask:'Which years, countries or kinds of research do I need?',eg:'Include studies published from 2018 onwards.',hint:'Set limits on dates, location or study type.',sugs:['Include studies published from 2018 onwards','Focus on Australian research','Only include peer-reviewed journal articles']},
+{k:'L',name:'Look again',what:'Check the answer, then ask a follow-up to improve it.',ask:'What is missing, unclear or one-sided in the answer?',eg:'Now show which of these findings other studies disagree with.',hint:'Your next prompt, after reading the first answer.',sugs:['Which studies disagree with these findings?','What are the limitations of these studies?','Suggest keywords I could use in a database search']}
+];
+
+var root=document.getElementById('prl');
+var $=function(s){return root.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(root.querySelectorAll(s))};
+var esc=function(t){return String(t).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+var tabs=$$('.steps button'),panels=$$('.panel');
+function show(i){tabs.forEach(function(t,j){t.setAttribute('aria-selected',j===i)});panels.forEach(function(p,j){p.classList.toggle('on',j===i)})}
+tabs.forEach(function(t){t.addEventListener('click',function(){show(+t.dataset.p)})});
+function done(i){tabs[i].classList.add('done')}
+function fb(el,msg,ok){el.textContent=msg;el.className='fb'+(ok===true?' ok':ok===false?' no':'')}
+
+/* 1. Letters */
+var seen={};
+PEARL.forEach(function(p,i){
+var b=document.createElement('button');b.className='lt';b.type='button';b.textContent=p.k;b.setAttribute('aria-label',p.k+' for '+p.name);
+b.addEventListener('click',function(){
+$$('.lt').forEach(function(x){x.classList.remove('on')});
+b.classList.add('on','seen');
+$('#prl-card').innerHTML='<div class="nm">'+p.k+' is for '+esc(p.name)+'</div><p style="margin:0">'+esc(p.what)+'</p><p class="ask">Ask yourself: '+esc(p.ask)+'</p><div class="eg"><strong>Example:</strong> '+esc(p.eg)+'</div>';
+seen[i]=1;if(Object.keys(seen).length===PEARL.length)done(0);
+});
+$('#prl-letters').appendChild(b);
+});
+
+/* 2. Compare */
+$$('.pbox').forEach(function(b){b.addEventListener('click',function(){
+$$('.pbox').forEach(function(x){x.style.borderColor=''});
+var ok=b.dataset.ok==='1';
+b.style.borderColor=ok?'#0a7a4f':'#e03a3a';
+fb($('#prl-cmpfb'),ok?'Yes. It states a purpose, names the key elements, sets the audience and limits the range. The tool has far less to guess.':'This works as database keywords, but an AI tool has to guess what you want, who it is for and which research counts. Try the other one.',ok);
+if(ok)done(1);
+})});
+
+/* 3. Label */
+var segs=[
+['Summarise what peer-reviewed research says','P'],
+['about how social media use affects sleep in teenagers (adolescents, young people).','E'],
+['Write for a first-year university student.','A'],
+['Include studies published from 2018 onwards.','R'],
+['Follow-up: Now show which of these findings other studies disagree with.','L']
+];
+var tagBox=$('#prl-tags');
+segs.forEach(function(s,i){
+var r=document.createElement('div');r.className='tagrow';
+var sel='<select aria-label="PEARL part for line '+(i+1)+'"><option value="">Choose...</option>'+PEARL.map(function(p){return '<option value="'+p.k+'">'+p.k+': '+esc(p.name)+'</option>'}).join('')+'</select>';
+r.innerHTML='<div class="seg">'+esc(s[0])+'</div>'+sel;
+tagBox.appendChild(r);
+});
+var sels=$$('#prl-tags select');
+function checkTags(){
+var right=0,blank=0;
+sels.forEach(function(s,i){
+s.classList.remove('ok','no');
+if(!s.value){blank++;return}
+if(s.value===segs[i][1]){s.classList.add('ok');right++}else s.classList.add('no');
+});
+var el=$('#prl-tagfb');
+if(blank)return fb(el,'Choose a part for every line first.',false);
+if(right===segs.length){fb(el,'All correct. Each part gives the tool one clear piece of direction.',true);done(2)}
+else fb(el,right+' of '+segs.length+' correct. Change the red boxes and check again.',false);
+}
+$('#prl-tagchk').addEventListener('click',checkTags);
+$('#prl-tagshow').addEventListener('click',function(){sels.forEach(function(s,i){s.value=segs[i][1]});checkTags()});
+
+/* 4. Builder */
+var fieldBox=$('#prl-fields'),inputs={};
+PEARL.forEach(function(p){
+var f=document.createElement('div');f.className='field';
+var id='prl-f'+p.k;
+var tag=p.k==='L'?'textarea':'input';
+f.innerHTML='<label for="'+id+'"><span class="badge">'+p.k+'</span>'+esc(p.name)+'</label><div class="hint">'+esc(p.hint)+'</div>'+
+(tag==='textarea'?'<textarea id="'+id+'" rows="2"></textarea>':'<input type="text" id="'+id+'" autocomplete="off">');
+if(p.k==='E'){
+f.innerHTML+='<div class="row" style="margin-top:6px"><input type="text" id="prl-e2" placeholder="Other words for it (optional)" autocomplete="off" style="flex:1 1 220px"></div>';
+}
+var sg=document.createElement('div');sg.className='sugs';
+p.sugs.forEach(function(t){
+var b=document.createElement('button');b.type='button';b.className='sug';b.textContent=t;
+b.addEventListener('click',function(){inputs[p.k].value=t;build()});
+sg.appendChild(b);
+});
+f.appendChild(sg);fieldBox.appendChild(f);
+inputs[p.k]=f.querySelector('#'+id);
+});
+inputs.E.placeholder='e.g. social media use and sleep in teenagers';
+inputs.P.placeholder='e.g. Summarise what peer-reviewed research says';
+var e2=$('#prl-e2');
+function clean(t){return t.trim().replace(/[.\s]+$/,'')}
+function build(){
+var v={};PEARL.forEach(function(p){v[p.k]=clean(inputs[p.k].value)});
+var syn=clean(e2.value);
+var first='';
+if(v.P&&v.E)first=v.P+' about '+v.E.replace(/^about\s+/i,'');
+else first=v.P||v.E;
+if(first&&syn)first+=' ('+syn+')';
+var lines=[first,v.A,v.R].filter(Boolean).map(function(t){return t+'.'});
+var txt=lines.join(' ');
+if(v.L)txt+=(txt?'\n\nFollow-up after reading the answer:\n':'')+v.L+(/[?.!]$/.test(v.L)?'':'.');
+$('#prl-out').textContent=txt||'Start typing in the boxes above.';
+$('#prl-meter').innerHTML=PEARL.map(function(p){return '<span class="'+(v[p.k]?'on':'')+'">'+p.k+'</span>'}).join('');
+var miss=PEARL.filter(function(p){return !v[p.k]}).map(function(p){return p.name});
+var el=$('#prl-buildfb');
+if(!txt)fb(el,'');
+else if(!miss.length){fb(el,'All five parts included. Copy your prompt into the tool, read the answer, then use your follow-up.',true);done(3)}
+else fb(el,'Still to add: '+miss.join(', ')+'.');
+}
+PEARL.forEach(function(p){inputs[p.k].addEventListener('input',build)});
+e2.addEventListener('input',build);
+$('#prl-ex').addEventListener('click',function(){
+inputs.P.value='Summarise what peer-reviewed research says';
+inputs.E.value='how social media use affects sleep in teenagers';
+e2.value='adolescents, young people';
+inputs.A.value='Write for a first-year university student';
+inputs.R.value='Include studies published from 2018 onwards';
+inputs.L.value='Which of these findings do other studies disagree with?';
+build();
+});
+$('#prl-clr').addEventListener('click',function(){PEARL.forEach(function(p){inputs[p.k].value=''});e2.value='';build()});
+$('#prl-copy').addEventListener('click',function(){
+var t=$('#prl-out').textContent,m=$('#prl-cmsg');
+if(t==='Start typing in the boxes above.'){m.textContent='Build a prompt first.';return}
+if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){m.textContent='Copied.'},function(){m.textContent='Select the text above and copy it.'})}
+else m.textContent='Select the text above and copy it.';
+});
+build();
+
+/* 5. Checklist and tools */
+var checks=[
+'I opened every reference the tool listed, and each one exists.',
+'The source actually says what the AI summary claims.',
+'The sources are scholarly and suit my assessment.',
+'I checked whether other research disagrees with the findings.',
+'I will cite the original sources, not the AI tool\u2019s summary.'
+];
+var cb=$('#prl-chk');
+checks.forEach(function(c,i){
+var l=document.createElement('label');
+l.innerHTML='<input type="checkbox"> <span>'+esc(c)+'</span>';
+cb.appendChild(l);
+});
+var boxes=$$('#prl-chk input');
+boxes.forEach(function(b){b.addEventListener('change',function(){
+var n=boxes.filter(function(x){return x.checked}).length,el=$('#prl-chkfb');
+if(n===boxes.length){fb(el,'Checklist complete. You are ready to use these sources.',true);done(4)}
+else fb(el,n+' of '+boxes.length+' checked.');
+})});
+var tBtns=$$('[data-t]'),tools=$$('.tool');
+tBtns.forEach(function(b){b.addEventListener('click',function(){
+tBtns.forEach(function(x){x.classList.toggle('on',x===b)});
+tools.forEach(function(t,j){t.classList.toggle('on',j===+b.dataset.t)});
+})});
+})();
+</script>
+</div>

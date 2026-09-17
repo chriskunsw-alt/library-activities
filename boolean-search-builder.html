@@ -1,0 +1,353 @@
+<div id="bsa" style="font-family:Arial,Helvetica,sans-serif; max-width:100%; width:100%; color:#2b2333">
+<style>
+#bsa *{box-sizing:border-box}
+#bsa .bar{background:#312a3d;color:#fff;padding:14px 18px;font-size:19px;font-weight:bold;border-bottom:3px solid #e03a3a}
+#bsa .bar small{display:block;font-size:12px;font-weight:normal;color:#c9c4d2;margin-top:3px}
+#bsa .steps{display:flex;flex-wrap:wrap;gap:6px;padding:12px 18px;border-bottom:1px solid #ededed}
+#bsa .steps button{font:inherit;font-size:14px;padding:7px 12px;border:1px solid #c9c9c9;background:#fff;border-radius:5px;cursor:pointer;color:#2b2333}
+#bsa .steps button[aria-selected="true"]{background:#2b2333;color:#fff;border-color:#2b2333}
+#bsa .steps button.done::after{content:" \2713";color:#0a7a4f}
+#bsa .steps button[aria-selected="true"].done::after{color:#9fe0c2}
+#bsa .panel{padding:22px 18px;display:none;max-width:860px}
+#bsa .panel.on{display:block}
+#bsa h2{font-size:22px;margin:0 0 8px}
+#bsa p{font-size:15px;line-height:1.55;margin:0 0 12px;max-width:70ch}
+#bsa .ops{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+#bsa .btn{font:inherit;font-size:15px;font-weight:bold;padding:9px 18px;border-radius:5px;border:2px solid #2b2333;background:#fff;color:#2b2333;cursor:pointer}
+#bsa .btn.on,#bsa .btn:hover{background:#2b2333;color:#fff}
+#bsa .go{background:#0a7a4f;border-color:#0a7a4f;color:#fff}
+#bsa .go:hover{background:#085f3d}
+#bsa button:focus-visible,#bsa input:focus-visible,#bsa select:focus-visible{outline:3px solid #0b63ce;outline-offset:2px}
+#bsa .fb{margin-top:12px;padding:10px 14px;border-left:4px solid #c9c9c9;background:#f6f5f8;font-size:15px;line-height:1.5;min-height:1em}
+#bsa .fb.ok{border-color:#0a7a4f;background:#eef8f3}
+#bsa .fb.no{border-color:#e03a3a;background:#fdf0f0}
+#bsa .fb:empty{display:none}
+#bsa input[type=text]{font:inherit;font-size:16px;padding:9px 12px;border:1px solid #c9c9c9;border-radius:5px;width:100%;max-width:420px}
+#bsa .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#bsa code,#bsa .mono{font-family:Consolas,"Courier New",monospace}
+#bsa .venn{max-width:360px;width:100%;height:auto;display:block;margin:6px 0}
+#bsa .letters{display:flex;flex-wrap:wrap;align-items:center;margin:10px 0;font-size:28px;font-family:Consolas,"Courier New",monospace}
+#bsa .letters span{padding:0 2px}
+#bsa .gap{width:18px;height:40px;border:0;background:transparent;cursor:pointer;position:relative;padding:0}
+#bsa .gap::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:#d8d4de}
+#bsa .gap:hover::before{background:#e03a3a;width:3px}
+#bsa .letters .cut{color:#b9b3c2}
+#bsa .star{color:#e03a3a;font-weight:bold}
+#bsa .words{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+#bsa .words span{padding:5px 10px;border-radius:14px;border:1px solid #c9c9c9;font-size:14px;background:#fff}
+#bsa .words span.hit{background:#0a7a4f;border-color:#0a7a4f;color:#fff}
+#bsa .words span.bad{background:#e03a3a;border-color:#e03a3a;color:#fff}
+#bsa .concept{border:1px solid #c9c9c9;border-radius:6px;padding:12px;margin:6px 0;background:#fff}
+#bsa .concept label{font-weight:bold;font-size:14px;display:block;margin-bottom:6px}
+#bsa .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#bsa .chip{display:inline-flex;align-items:center;gap:4px;background:#f0eef3;border-radius:14px;padding:4px 6px 4px 11px;font-size:14px}
+#bsa .chip button{border:0;background:transparent;cursor:pointer;font-size:16px;line-height:1;color:#6b6475;padding:2px 4px}
+#bsa .joiner{margin:4px 0 4px 12px}
+#bsa select{font:inherit;font-size:15px;padding:6px 8px;border-radius:5px;border:1px solid #c9c9c9}
+#bsa .out{background:#2b2333;color:#fff;padding:14px;border-radius:6px;font-family:Consolas,"Courier New",monospace;font-size:15px;line-height:1.5;word-break:break-word;margin:12px 0 8px;min-height:48px}
+#bsa .tips{font-size:14px;margin:6px 0 0;padding-left:18px}
+#bsa .tips li{margin-bottom:4px}
+#bsa .note{border-top:1px solid #ededed;color:#8a8a8a;font-size:13px;font-style:italic;line-height:1.5;margin:10px 18px 18px;padding-top:10px}
+#bsa .hl{background-color:#fffdf0}
+#bsa .qopt{display:block;width:100%;text-align:left;font-weight:normal;margin:6px 0;max-width:420px}
+#bsa .qopt code{font-weight:bold}
+</style>
+
+<div class="bar">Boolean search builder<small>Build stronger database searches, one skill at a time</small></div>
+
+<div class="steps" role="tablist">
+<button role="tab" aria-selected="true" data-p="0">1. AND, OR, NOT</button>
+<button role="tab" aria-selected="false" data-p="1">2. Phrase searching</button>
+<button role="tab" aria-selected="false" data-p="2">3. Truncation</button>
+<button role="tab" aria-selected="false" data-p="3">4. Wildcards</button>
+<button role="tab" aria-selected="false" data-p="4">5. Build your search</button>
+</div>
+
+<!-- 1. Operators -->
+<div class="panel on" role="tabpanel">
+<h2>Combine ideas with AND, OR, NOT</h2>
+<p>Circle A is every article about <strong>sleep</strong>. Circle B is every article about <strong>social media</strong>. Select an operator to see which articles a database returns.</p>
+<div class="ops" id="bsa-ops">
+<button class="btn" data-op="AND">sleep AND "social media"</button>
+<button class="btn" data-op="OR">sleep OR "social media"</button>
+<button class="btn" data-op="NOT">sleep NOT "social media"</button>
+</div>
+<svg class="venn" viewBox="0 0 360 200" role="img" aria-label="Venn diagram of two overlapping circles">
+<defs>
+<clipPath id="bsa-cA"><circle cx="135" cy="100" r="80"/></clipPath>
+<mask id="bsa-mNot"><rect width="360" height="200" fill="#fff"/><circle cx="225" cy="100" r="80" fill="#000"/></mask>
+</defs>
+<circle id="bsa-a" cx="135" cy="100" r="80" fill="#fff"/>
+<circle id="bsa-b" cx="225" cy="100" r="80" fill="#fff"/>
+<circle id="bsa-ab" cx="225" cy="100" r="80" fill="#fff" clip-path="url(#bsa-cA)"/>
+<circle id="bsa-an" cx="135" cy="100" r="80" fill="none" mask="url(#bsa-mNot)"/>
+<circle cx="135" cy="100" r="80" fill="none" stroke="#2b2333" stroke-width="2"/>
+<circle cx="225" cy="100" r="80" fill="none" stroke="#2b2333" stroke-width="2"/>
+<text x="90" y="105" font-size="15" font-weight="bold" fill="#2b2333" text-anchor="middle" id="bsa-tA">sleep</text>
+<text x="272" y="105" font-size="15" font-weight="bold" fill="#2b2333" text-anchor="middle" id="bsa-tB">social media</text>
+</svg>
+<div class="fb" id="bsa-opfb">Select an operator above.</div>
+
+<p style="margin-top:22px"><strong>Check yourself.</strong> Your search on <em>teenagers</em> returns too few results. Which operator helps you find more?</p>
+<div id="bsa-q1">
+<button class="btn qopt" data-a="no" data-f="AND narrows. Every extra term with AND means fewer results.">teenagers <code>AND</code> adolescents</button>
+<button class="btn qopt" data-a="ok" data-f="Correct. OR finds articles that use either word, so results go up. Use OR for synonyms.">teenagers <code>OR</code> adolescents</button>
+<button class="btn qopt" data-a="no" data-f="NOT removes results. It would take out any article that mentions adolescents.">teenagers <code>NOT</code> adolescents</button>
+</div>
+<div class="fb" id="bsa-q1fb"></div>
+</div>
+
+<!-- 2. Phrase -->
+<div class="panel" role="tabpanel">
+<h2>Keep words together with quotation marks</h2>
+<p>Without quotes, many databases search for each word separately, anywhere in the record. Quotes tell the database to find the words together, in that order.</p>
+<p><strong>Try it.</strong> Type a search that finds only the exact phrase <strong>climate change</strong>, then select <strong>Check</strong>.</p>
+<div class="row">
+<input type="text" id="bsa-ph" placeholder="Type your search here" autocomplete="off">
+<button class="btn go" id="bsa-phgo">Check</button>
+</div>
+<div class="fb" id="bsa-phfb"></div>
+<p style="margin-top:20px"><strong>Which of these records match?</strong> Select each record that <code>"climate change"</code> would find.</p>
+<div class="words" id="bsa-recs">
+<span tabindex="0" role="button" data-m="1">Climate change and coastal cities</span>
+<span tabindex="0" role="button" data-m="0">How firms change their climate policies</span>
+<span tabindex="0" role="button" data-m="1">Investor views on climate change risk</span>
+<span tabindex="0" role="button" data-m="0">Change management in a hot climate</span>
+</div>
+<div class="fb" id="bsa-recfb"></div>
+</div>
+
+<!-- 3. Truncation -->
+<div class="panel" role="tabpanel">
+<h2>Find word endings with truncation</h2>
+<p>An asterisk <span class="star">*</span> at the end of a word stem finds any ending. Select a line between letters to cut the word and add <span class="star">*</span>. Aim to find all four green-target words and nothing unrelated.</p>
+<div class="letters" id="bsa-letters"></div>
+<p class="mono" style="font-size:18px">Your search: <strong id="bsa-trq">economics</strong></p>
+<p style="margin-bottom:4px"><strong>Words this finds</strong></p>
+<div class="words" id="bsa-trw"></div>
+<div class="fb" id="bsa-trfb"></div>
+</div>
+
+<!-- 4. Wildcards -->
+<div class="panel" role="tabpanel">
+<h2>Cover spelling differences with wildcards</h2>
+<p>A wildcard <span class="star">?</span> stands in for one letter inside a word. It is useful for Australian and American spellings, and for singular and plural forms like <code>wom?n</code> (woman, women).</p>
+<p><strong>Try it.</strong> Type one search term that finds both <strong>organisation</strong> and <strong>organization</strong>. The word list updates as you type.</p>
+<div class="row">
+<input type="text" id="bsa-wc" placeholder="e.g. behavio?r" autocomplete="off">
+</div>
+<div class="words" id="bsa-wcw"></div>
+<div class="fb" id="bsa-wcfb"></div>
+<p class="hl" style="margin-top:16px">Symbols differ between databases. For example, some use <code>#</code> or <code>$</code> as well. Check the help page of the database you are searching.</p>
+</div>
+
+<!-- 5. Builder -->
+<div class="panel" role="tabpanel">
+<h2>Build your own search</h2>
+<p>Type a keyword and press <strong>Enter</strong> (or select <strong>Add</strong>). Put synonyms for the same idea in the same box. The builder adds OR, brackets and quotes for you.</p>
+<div id="bsa-concepts"></div>
+<div class="row" style="margin-top:8px">
+<button class="btn" id="bsa-addc">Add another concept</button>
+<button class="btn" id="bsa-ex">Load an example</button>
+<button class="btn" id="bsa-clr">Clear all</button>
+</div>
+<p style="margin:16px 0 0"><strong>Your search string</strong></p>
+<div class="out" id="bsa-out" aria-live="polite">Add keywords to see your search.</div>
+<div class="row"><button class="btn go" id="bsa-copy">Copy search</button><span id="bsa-cmsg" style="font-size:14px"></span></div>
+<ul class="tips" id="bsa-tips"></ul>
+</div>
+
+<p class="note">Examples and diagrams in this activity are drawn for teaching. Databases differ in the symbols and features they support, so check each database's help page.</p>
+
+<script>
+(function(){
+var root=document.getElementById('bsa');
+var $=function(s){return root.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(root.querySelectorAll(s))};
+var tabs=$$('.steps button'), panels=$$('.panel');
+function show(i){tabs.forEach(function(t,j){t.setAttribute('aria-selected',j===i)});panels.forEach(function(p,j){p.classList.toggle('on',j===i)})}
+tabs.forEach(function(t){t.addEventListener('click',function(){show(+t.dataset.p)})});
+function done(i){tabs[i].classList.add('done')}
+function fb(el,msg,ok){el.textContent=msg;el.className='fb'+(ok===true?' ok':ok===false?' no':'')}
+
+/* 1. Venn */
+var shade='#f5d547', seen={};
+var opText={
+AND:'AND finds articles that mention both sleep and social media. Only the overlap is returned, so AND narrows your results.',
+OR:'OR finds articles that mention either term, or both. Everything in both circles is returned, so OR broadens your results.',
+NOT:'NOT finds articles about sleep that never mention social media. Use it with care: it can remove useful articles that mention the excluded word only once.'};
+$$('#bsa-ops .btn').forEach(function(b){b.addEventListener('click',function(){
+var op=b.dataset.op;
+$$('#bsa-ops .btn').forEach(function(x){x.classList.toggle('on',x===b)});
+var a=$('#bsa-a'),bb=$('#bsa-b'),ab=$('#bsa-ab'),an=$('#bsa-an');
+a.setAttribute('fill','#fff');bb.setAttribute('fill','#fff');ab.setAttribute('fill','#fff');an.setAttribute('fill','none');
+if(op==='AND')ab.setAttribute('fill',shade);
+if(op==='OR'){a.setAttribute('fill',shade);bb.setAttribute('fill',shade);ab.setAttribute('fill',shade)}
+if(op==='NOT')an.setAttribute('fill',shade);
+fb($('#bsa-opfb'),opText[op]);
+seen[op]=1; if(Object.keys(seen).length===3)done(0);
+})});
+$$('#bsa-q1 .btn').forEach(function(b){b.addEventListener('click',function(){
+fb($('#bsa-q1fb'),b.dataset.f,b.dataset.a==='ok');
+})});
+
+/* 2. Phrase */
+function checkPhrase(){
+var v=$('#bsa-ph').value.trim().replace(/[\u201C\u201D]/g,'"').toLowerCase();
+var el=$('#bsa-phfb');
+if(!v)return fb(el,'Type a search first.',false);
+if(v==='"climate change"'){fb(el,'Correct. The quotes keep "climate change" together as one phrase.',true);done(1);return}
+if(v==='climate change')return fb(el,'Close. Without quotes the database may find climate and change in different places. Add quotation marks around the phrase.',false);
+if(v.indexOf('"')>-1&&v.indexOf('climate')>-1)return fb(el,'Check your quotation marks. Put one before climate and one after change, with nothing else inside.',false);
+fb(el,'Not quite. Type the two words climate change inside quotation marks.',false);
+}
+$('#bsa-phgo').addEventListener('click',checkPhrase);
+$('#bsa-ph').addEventListener('keydown',function(e){if(e.key==='Enter')checkPhrase()});
+$$('#bsa-recs span').forEach(function(s){
+function pick(){
+var ok=s.dataset.m==='1';
+s.classList.remove('hit','bad');s.classList.add(ok?'hit':'bad');
+fb($('#bsa-recfb'),ok?'Yes. The words appear together, in order.':'No. Both words are there, but not side by side as a phrase.',ok);
+}
+s.addEventListener('click',pick);
+s.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick()}});
+});
+
+/* matching helper: * = any ending, ? = one character */
+function toRe(p){
+var esc=p.toLowerCase().replace(/[.+^${}()|[\]\\]/g,'\\$&').replace(/\*/g,'[a-z]*').replace(/\?/g,'[a-z]');
+return new RegExp('^'+esc+'$');
+}
+
+/* 3. Truncation */
+var base='economics';
+var trTarget=['economic','economics','economy','economist'];
+var trOther=['ecology','ecological','ecosystem','echo','ecologist'];
+var trWords=trTarget.concat(trOther);
+function drawTrunc(cut){
+var box=$('#bsa-letters');box.innerHTML='';
+for(var i=0;i<base.length;i++){
+var sp=document.createElement('span');sp.textContent=base[i];
+if(cut!==null&&i>=cut)sp.className='cut';
+box.appendChild(sp);
+if(i<base.length-1){
+var g=document.createElement('button');g.className='gap';g.type='button';
+g.setAttribute('aria-label','Cut after '+base.slice(0,i+1));
+(function(n){g.addEventListener('click',function(){drawTrunc(n)})})(i+1);
+box.appendChild(g);
+}
+}
+var q=cut===null?base:base.slice(0,cut)+'*';
+$('#bsa-trq').innerHTML=cut===null?base:base.slice(0,cut)+'<span class="star">*</span>';
+var re=toRe(q),hits=0,extra=0,wl=$('#bsa-trw');wl.innerHTML='';
+trWords.forEach(function(w){
+var s=document.createElement('span');s.textContent=w;
+if(re.test(w)){var t=trTarget.indexOf(w)>-1;s.className=t?'hit':'bad';t?hits++:extra++}
+wl.appendChild(s);
+});
+var el=$('#bsa-trfb');
+if(cut===null)return fb(el,'Select a line between two letters to start.');
+if(hits===4&&extra===0){fb(el,'Well done. '+q+' finds all four target words and nothing unrelated. In a real database it also finds words like economies and economically.',true);done(2);return}
+if(hits===4)return fb(el,'You found all four, but the stem is too short and also picks up unrelated words (red). Cut a little later.',false);
+fb(el,'Only '+hits+' of 4 target words found. Cut earlier so the stem is shared by all of them.',false);
+}
+drawTrunc(null);
+
+/* 4. Wildcards */
+var wcWords=['organisation','organization','organisations','organ','origination','organising'];
+function drawWc(){
+var v=$('#bsa-wc').value.trim(),wl=$('#bsa-wcw'),el=$('#bsa-wcfb');wl.innerHTML='';
+var re=v?toRe(v):null,a=false,b=false,other=0;
+wcWords.forEach(function(w){
+var s=document.createElement('span');s.textContent=w;
+if(re&&re.test(w)){
+if(w==='organisation')a=true; else if(w==='organization')b=true; else other++;
+s.className=(w==='organisation'||w==='organization')?'hit':'bad';
+}
+wl.appendChild(s);
+});
+if(!v)return fb(el,'');
+if(v.indexOf('?')<0)return fb(el,'Use ? in place of the letter that changes between the two spellings.',false);
+if(a&&b&&other===0){fb(el,'Correct. organi?ation finds both spellings. The ? matches exactly one letter.',true);done(3);return}
+if(a&&b)return fb(el,'Both spellings found, but so are other words. Use ? for the one letter that changes, and keep the rest of the word.',false);
+fb(el,'Not yet. Which single letter is different between organisation and organization?',false);
+}
+$('#bsa-wc').addEventListener('input',drawWc);
+
+/* 5. Builder */
+var concepts=[];
+function render(){
+var box=$('#bsa-concepts');box.innerHTML='';
+concepts.forEach(function(c,i){
+if(i>0){
+var j=document.createElement('div');j.className='joiner';
+var sel=document.createElement('select');sel.setAttribute('aria-label','Operator before concept '+(i+1));
+['AND','NOT'].forEach(function(o){var op=document.createElement('option');op.textContent=o;if(c.op===o)op.selected=true;sel.appendChild(op)});
+sel.addEventListener('change',function(){c.op=sel.value;update()});
+j.appendChild(sel);box.appendChild(j);
+}
+var d=document.createElement('div');d.className='concept';
+var id='bsa-in'+i;
+d.innerHTML='<label for="'+id+'">Concept '+(i+1)+(i===0?' (your main idea)':'')+'</label>';
+var r=document.createElement('div');r.className='row';
+var inp=document.createElement('input');inp.type='text';inp.id=id;inp.placeholder='Type a keyword or phrase';inp.autocomplete='off';
+var add=document.createElement('button');add.className='btn';add.type='button';add.textContent='Add';
+function addTerm(){var v=inp.value.trim();if(!v)return;c.terms.push(v);inp.value='';render();root.querySelector('#'+id).focus()}
+add.addEventListener('click',addTerm);
+inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addTerm()}});
+r.appendChild(inp);r.appendChild(add);
+if(i>0){var rm=document.createElement('button');rm.className='btn';rm.type='button';rm.textContent='Remove concept';rm.addEventListener('click',function(){concepts.splice(i,1);render()});r.appendChild(rm)}
+d.appendChild(r);
+var ch=document.createElement('div');ch.className='chips';
+c.terms.forEach(function(t,k){
+var s=document.createElement('span');s.className='chip';s.textContent=fmt(t);
+var x=document.createElement('button');x.type='button';x.textContent='\u00d7';x.setAttribute('aria-label','Remove '+t);
+x.addEventListener('click',function(){c.terms.splice(k,1);render()});
+s.appendChild(x);ch.appendChild(s);
+});
+d.appendChild(ch);box.appendChild(d);
+});
+update();
+}
+function fmt(t){
+t=t.replace(/[\u201C\u201D]/g,'"');
+if(/\s/.test(t)&&!/^".*"$/.test(t))return '"'+t.replace(/"/g,'')+'"';
+return t;
+}
+function update(){
+var parts=[];
+concepts.forEach(function(c,i){
+if(!c.terms.length)return;
+var g=c.terms.map(fmt).join(' OR ');
+if(c.terms.length>1&&concepts.filter(function(x){return x.terms.length}).length>1)g='('+g+')';
+parts.push((parts.length?c.op+' ':'')+g);
+});
+var out=$('#bsa-out');
+out.textContent=parts.length?parts.join(' '):'Add keywords to see your search.';
+var tips=[],filled=concepts.filter(function(c){return c.terms.length});
+if(!filled.length)tips.push('Start with the main idea of your topic in Concept 1.');
+if(filled.length===1)tips.push('Add a second concept so AND can narrow your results.');
+filled.forEach(function(c){if(c.terms.length===1)tips.push('Add a synonym to "'+c.terms[0]+'" so OR can widen that idea.')});
+var all=[].concat.apply([],filled.map(function(c){return c.terms}));
+if(all.length&&!all.some(function(t){return /[*?]/.test(t)}))tips.push('Could any keyword use * for different endings, or ? for spelling differences?');
+if(concepts.some(function(c,i){return i>0&&c.op==='NOT'&&c.terms.length}))tips.push('NOT can remove useful results. Check what you lose.');
+if(filled.length>=2&&filled.every(function(c){return c.terms.length>1})){tips.push('Strong search. Paste it into a database and adjust based on what you find.');done(4)}
+$('#bsa-tips').innerHTML=tips.map(function(t){return '<li>'+t.replace(/</g,'&lt;')+'</li>'}).join('');
+}
+$('#bsa-addc').addEventListener('click',function(){concepts.push({op:'AND',terms:[]});render()});
+$('#bsa-clr').addEventListener('click',function(){concepts=[{op:'AND',terms:[]},{op:'AND',terms:[]}];render()});
+$('#bsa-ex').addEventListener('click',function(){
+concepts=[{op:'AND',terms:['social media','Instagram','TikTok']},{op:'AND',terms:['teen*','adolescen*','young people']},{op:'AND',terms:['sleep','insomnia']}];
+render();
+});
+$('#bsa-copy').addEventListener('click',function(){
+var t=$('#bsa-out').textContent,m=$('#bsa-cmsg');
+if(!concepts.some(function(c){return c.terms.length})){m.textContent='Add keywords first.';return}
+if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){m.textContent='Copied.'},function(){m.textContent='Select the text above and copy it.'})}
+else m.textContent='Select the text above and copy it.';
+});
+concepts=[{op:'AND',terms:[]},{op:'AND',terms:[]}];
+render();
+})();
+</script>
+</div>
