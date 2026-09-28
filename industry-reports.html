@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html lang="en-AU">
-<script>
-try{var L=Math.round(screen.availWidth*0.3),X=(screen.availLeft||0),Y=(screen.availTop||0);
-window.moveTo(X+L,Y);window.resizeTo(screen.availWidth-L,screen.availHeight)}catch(e){}
-</script>  
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -134,11 +130,36 @@ footer{padding:40px 0 60px;border-top:1px solid var(--line);font-size:14px;color
 .embed .big-n{width:40px;height:40px;font-size:20px}
 .embed h2{font-size:26px}
 .embed .panel{padding:14px}
+@media (max-width:1100px){
+body{font-size:16px}
+body::after{display:none}
+.wrap{padding:0 16px}
+.bar{position:static}
+.hero{padding:20px 16px 8px}
+.hero h1{font-size:32px}
+.hero h1::after{width:70px;height:5px;margin-top:10px}
+.hero p{font-size:16px}
+section{padding:28px 0}
+.big-n{width:40px;height:40px;font-size:20px}
+h2{font-size:26px}
+.panel{padding:14px}
+}
+.tt{margin:22px 0 0;font-size:14px}
+.tt a{font-weight:500}
+.totop{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;font:inherit;font-weight:500;font-size:15px;padding:10px 16px;border-radius:999px;border:2px solid var(--ink);background:var(--yellow);color:#000;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2);opacity:0;visibility:hidden;transition:opacity .2s}
+.totop.show{opacity:1;visibility:visible}
 </style>
 <script>if(window.self!==window.top||/[?&]embed/.test(location.search))document.documentElement.classList.add('embed')</script>
+<script>
+(function(){var R=0.27;
+function place(){try{var L=Math.round(screen.availWidth*R),X=(screen.availLeft||0),Y=(screen.availTop||0);
+window.moveTo(X+L,Y);window.resizeTo(screen.availWidth-L,screen.availHeight)}catch(e){}}
+if(window.self===window.top&&(window.opener||(window.toolbar&&!window.toolbar.visible))){place();
+window.addEventListener('load',function(){place();setTimeout(place,600);setTimeout(place,1500)})}})();
+</script>
 </head>
 <body>
-<header class="bar"><div class="wrap"><div class="brand">UNSW Library</div><nav class="nav" aria-label="Sections"><a href="#sources"><span class="n">1</span>Sources</a><a href="#find"><span class="n">2</span>Report sections</a><a href="#lenses"><span class="n">3</span>Four things</a><a href="#swot"><span class="n">4</span>SWOT</a><a href="#check"><span class="n">5</span>Think critically</a></nav></div></header>
+<header class="bar" id="top"><div class="wrap"><div class="brand">UNSW Library</div><nav class="nav" aria-label="Sections"><a href="#sources"><span class="n">1</span>Sources</a><a href="#find"><span class="n">2</span>Report sections</a><a href="#lenses"><span class="n">3</span>Four things</a><a href="#swot"><span class="n">4</span>SWOT</a><a href="#check"><span class="n">5</span>Think critically</a></nav></div></header>
 <main>
 <div class="wrap hero"><h1>Read an industry report</h1><p>Industry reports give you figures, competitors and trends. Practise finding what matters, using a soy milk industry report as the example.</p><p class="sub">Find industry reports in trusted databases such as IBISWorld and MarketLine through UNSW Library.</p></div><section id="sources"><div class="wrap">
 <div class="sec-head"><div class="big-n">1</div><div><h2>Know your sources</h2><p class="lead">Both are trusted, dated sources you can cite. Each has its strengths.</p></div></div>
@@ -147,15 +168,19 @@ footer{padding:40px 0 60px;border-top:1px solid var(--line);font-size:14px;color
 <div><h4>MarketLine</h4><p>Industry and company profiles across many countries. Company profiles often include a SWOT analysis.</p></div>
 <div><h4>Why not just ask AI?</h4><p>AI tools can give outdated or invented figures with no source. Industry databases tell you where the numbers came from and when.</p></div>
 </div><div class="tip"><div class="ic">i</div><p>Can't find a report called “soy milk”? Reports often cover a wider group. Try broader or related names, such as plant-based milk or non-dairy beverages.</p></div>
+<p class="tt"><a href="#top">Back to top</a></p>
 </div></section><section id="find"><div class="wrap">
 <div class="sec-head"><div class="big-n">2</div><div><h2>Where would you find it?</h2><p class="lead">A good industry report answers these questions. Sort each one into the part of the report you'd check.</p></div></div>
 <div class="panel" id="s1"></div>
+<p class="tt"><a href="#top">Back to top</a></p>
 </div></section><section id="lenses"><div class="wrap">
 <div class="sec-head"><div class="big-n">3</div><div><h2>Four things to look for</h2><p class="lead">Sort each statement by what it tells you about the industry.</p></div></div>
 <p class="small muted">These statements are made up for practice. They are not real findings about the soy milk industry.</p><div class="panel" id="s2"></div>
+<p class="tt"><a href="#top">Back to top</a></p>
 </div></section><section id="swot"><div class="wrap">
 <div class="sec-head"><div class="big-n">4</div><div><h2>Sort the SWOT</h2><p class="lead">A SWOT shows where an industry is doing well and where it's falling short. Strengths and weaknesses come from inside the industry. Opportunities and threats come from outside.</p></div></div>
 <p class="small muted">These statements are made up for practice.</p><div class="panel swot" id="s3"></div>
+<p class="tt"><a href="#top">Back to top</a></p>
 </div></section><section id="check"><div class="wrap">
 <div class="sec-head"><div class="big-n">5</div><div><h2>Think critically</h2><p class="lead">Industry figures can be tricky. Choose the best response.</p></div></div>
 <div id="quiz"></div><div class="reflect"><h3>Your report checklist</h3><p class="small muted">Tick each one off when you find it in your own report.</p><ul class="check">
@@ -164,8 +189,11 @@ footer{padding:40px 0 60px;border-top:1px solid var(--line);font-size:14px;color
 <li><input type="checkbox" id="k3"><label for="k3"><b>Major players:</b> the biggest companies and their market share</label></li>
 <li><input type="checkbox" id="k4"><label for="k4"><b>SWOT analysis:</b> where the industry is excelling and falling short</label></li>
 <li><input type="checkbox" id="k5"><label for="k5"><b>External environment:</b> who buys these products and why</label></li></ul></div>
+<p class="tt"><a href="#top">Back to top</a></p>
 </div></section>
 </main>
+<button class="totop" type="button" id="toTop" aria-label="Back to top">&uarr; Top</button>
+
 <footer><div class="wrap"><p>UNSW Library. This activity runs in your browser. Your answers aren't saved or sent anywhere.</p></div></footer>
 <script>
 const $=s=>document.querySelector(s);
@@ -249,6 +277,12 @@ makeQuiz($('#quiz'),[
 {q:'Your industry report is four years old. What is the best step?',c:['Use it as it is','Look for a newer edition and check recent news for changes','Ignore the date, industries rarely change'],a:1,why:'Industries change quickly. Use the latest edition and note the date of any figure you cite.'},
 {q:'Two sources give different market sizes. Why might that be?',c:['One of them must be fake','They may define the industry differently or measure different years','The bigger number is always right'],a:1,why:'Check how each source defines the industry and which year the figure covers before you compare.'}]);
 
+</script>
+<script>
+(function(){var b=document.getElementById('toTop');
+function chk(){b.classList.toggle('show',window.scrollY>400)}
+window.addEventListener('scroll',chk,{passive:true});chk();
+b.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});var h=document.querySelector('.bar a');if(h)h.focus({preventScroll:true})})})();
 </script>
 </body>
 </html>
