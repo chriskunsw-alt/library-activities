@@ -124,7 +124,10 @@ body::after{display:none}
 .arrow{font:inherit;font-weight:500;font-size:14px;padding:6px 12px;border-radius:8px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer}
 .arrow:disabled{opacity:.35;cursor:default}
 @media (max-width:620px){.top .ttl{display:none}}
-.deck{height:calc(100% - 52px);display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:thin}
+.deck{height:calc(100% - 52px);display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none}
+.deck::-webkit-scrollbar{display:none}
+.done{background:var(--soft);border-radius:8px;padding:7px 14px;font-size:14px}
+.dots::before{content:"Activity";font-size:13px;color:var(--muted);align-self:center;margin-right:4px}
 .slide{flex:0 0 100%;height:100%;overflow-y:auto;scroll-snap-align:start;padding:18px 24px 28px}
 .slide .in{max-width:1200px;margin:0 auto}
 .sh{display:flex;gap:12px;align-items:center;margin-bottom:6px}
@@ -174,9 +177,7 @@ body::after{display:none}
 </head>
 <body>
 <header class="top"><span class="brand">UNSW Library</span><span class="ttl">Read an industry report</span>
-<button class="arrow" type="button" id="prev" aria-label="Previous activity">&larr;</button>
-<nav class="dots" aria-label="Activities"><button class="dot" type="button" data-go="0" aria-label="Go to activity 1">1</button><button class="dot" type="button" data-go="1" aria-label="Go to activity 2">2</button><button class="dot" type="button" data-go="2" aria-label="Go to activity 3">3</button><button class="dot" type="button" data-go="3" aria-label="Go to activity 4">4</button><button class="dot" type="button" data-go="4" aria-label="Go to activity 5">5</button></nav>
-<button class="arrow" type="button" id="next" aria-label="Next activity">&rarr;</button></header>
+<nav class="dots" aria-label="Activities"><button class="dot" type="button" data-go="0" aria-label="Go to activity 1">1</button><button class="dot" type="button" data-go="1" aria-label="Go to activity 2">2</button><button class="dot" type="button" data-go="2" aria-label="Go to activity 3">3</button><button class="dot" type="button" data-go="3" aria-label="Go to activity 4">4</button><button class="dot" type="button" data-go="4" aria-label="Go to activity 5">5</button></nav></header>
 <main class="deck" id="deck">
 <section class="slide" id="p1" aria-label="Activity 1 of 5: Know your sources"><div class="in">
 <div class="sh"><div class="big-n">1</div><h2>Know your sources</h2></div><p class="lead">Industry reports give you figures, competitors and trends. Find them in trusted databases such as IBISWorld and MarketLine through UNSW Library.</p>
@@ -185,19 +186,19 @@ body::after{display:none}
 <div><h4>MarketLine</h4><p>Industry and company profiles across many countries. Company profiles often include a SWOT analysis.</p></div>
 <div><h4>Why not just ask AI?</h4><p>AI tools can give outdated or invented figures with no source. Industry databases tell you where the numbers came from and when.</p></div></div>
 <div class="tip"><div class="ic">i</div><p>Can't find a report called “soy milk”? Reports often cover a wider group. Try broader or related names, such as plant-based milk or non-dairy beverages.</p></div>
-<div class="nextbar"><span></span><button class="btn" type="button" data-go="1">Next &rarr;</button></div></div></section>
+<div class="nextbar"><span></span><button class="btn" type="button" data-go="1">Next activity &rarr;</button></div></div></section>
 <section class="slide" id="p2" aria-label="Activity 2 of 5: Where would you find it?"><div class="in">
 <div class="sh"><div class="big-n">2</div><h2>Where would you find it?</h2></div><p class="lead">Sort each question into the part of a soy milk industry report you'd check.</p>
 <div class="panel sorter" id="s1"></div>
-<div class="nextbar"><button class="arrow" type="button" data-go="0">&larr; Previous</button><button class="btn" type="button" data-go="2">Next &rarr;</button></div></div></section>
+<div class="nextbar"><button class="arrow" type="button" data-go="0">&larr; Previous activity</button><button class="btn" type="button" data-go="2">Next activity &rarr;</button></div></div></section>
 <section class="slide" id="p3" aria-label="Activity 3 of 5: Four things to look for"><div class="in">
 <div class="sh"><div class="big-n">3</div><h2>Four things to look for</h2></div><p class="lead">Sort each statement by what it tells you about the industry.</p>
 <p class="note">These statements are made up for practice. They are not real findings about the soy milk industry.</p><div class="panel sorter" id="s2"></div>
-<div class="nextbar"><button class="arrow" type="button" data-go="1">&larr; Previous</button><button class="btn" type="button" data-go="3">Next &rarr;</button></div></div></section>
+<div class="nextbar"><button class="arrow" type="button" data-go="1">&larr; Previous activity</button><button class="btn" type="button" data-go="3">Next activity &rarr;</button></div></div></section>
 <section class="slide" id="p4" aria-label="Activity 4 of 5: Sort the SWOT"><div class="in">
 <div class="sh"><div class="big-n">4</div><h2>Sort the SWOT</h2></div><p class="lead">Strengths and weaknesses come from inside the industry. Opportunities and threats come from outside.</p>
 <p class="note">These statements are made up for practice.</p><div class="panel sorter swot" id="s3"></div>
-<div class="nextbar"><button class="arrow" type="button" data-go="2">&larr; Previous</button><button class="btn" type="button" data-go="4">Next &rarr;</button></div></div></section>
+<div class="nextbar"><button class="arrow" type="button" data-go="2">&larr; Previous activity</button><button class="btn" type="button" data-go="4">Next activity &rarr;</button></div></div></section>
 <section class="slide" id="p5" aria-label="Activity 5 of 5: Think critically"><div class="in">
 <div class="sh"><div class="big-n">5</div><h2>Think critically</h2></div><p class="lead">Industry figures can be tricky. Choose the best response.</p>
 <div id="quiz"></div><div class="reflect"><h3>Your report checklist</h3><ul class="check">
@@ -206,7 +207,7 @@ body::after{display:none}
 <li><input type="checkbox" id="k3"><label for="k3"><b>Major players:</b> the biggest companies and their market share</label></li>
 <li><input type="checkbox" id="k4"><label for="k4"><b>SWOT analysis:</b> where the industry is excelling and falling short</label></li>
 <li><input type="checkbox" id="k5"><label for="k5"><b>External environment:</b> who buys these products and why</label></li></ul></div>
-<div class="nextbar"><button class="arrow" type="button" data-go="3">&larr; Previous</button><span class="small muted">End of activities</span></div></div></section>
+<div class="nextbar"><button class="arrow" type="button" data-go="3">&larr; Previous activity</button><span class="done">All done. Select <b>Finish</b> on the left.</span></div></div></section>
 </main>
 <script>
 const $=s=>document.querySelector(s);
@@ -293,10 +294,10 @@ makeQuiz($('#quiz'),[
 
 const deck=$('#deck'),slides=[...deck.querySelectorAll('.slide')],dotEls=[...document.querySelectorAll('.dot')];let cur=0;
 function go(i,focus){i=Math.max(0,Math.min(slides.length-1,i));deck.scrollTo({left:slides[i].offsetLeft,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});setCur(i);slides[i].scrollTop=0;if(focus)slides[i].querySelector('h2').focus({preventScroll:true})}
-function setCur(i){cur=i;dotEls.forEach((d,k)=>d.toggleAttribute('aria-current',k===i)||d.setAttribute('aria-current',k===i?'step':''));dotEls.forEach((d,k)=>{if(k===i)d.setAttribute('aria-current','step');else d.removeAttribute('aria-current')});$('#prev').disabled=i===0;$('#next').disabled=i===slides.length-1}
+function setCur(i){cur=i;dotEls.forEach((d,k)=>d.toggleAttribute('aria-current',k===i)||d.setAttribute('aria-current',k===i?'step':''));dotEls.forEach((d,k)=>{if(k===i)d.setAttribute('aria-current','step');else d.removeAttribute('aria-current')});}
 slides.forEach(s=>s.querySelector('h2').setAttribute('tabindex','-1'));
 document.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(+b.dataset.go,true)});
-$('#prev').addEventListener('click',()=>go(cur-1,true));$('#next').addEventListener('click',()=>go(cur+1,true));
+
 let t;deck.addEventListener('scroll',()=>{clearTimeout(t);t=setTimeout(()=>{const i=Math.round(deck.scrollLeft/deck.clientWidth);if(i!==cur)setCur(i)},80)},{passive:true});
 document.addEventListener('keydown',e=>{if(e.target.closest('input,textarea,select'))return;if(e.key==='ArrowRight'&&!e.target.closest('.card'))go(cur+1,true);if(e.key==='ArrowLeft'&&!e.target.closest('.card'))go(cur-1,true)});
 window.addEventListener('resize',()=>{deck.style.scrollBehavior='auto';deck.scrollLeft=slides[cur].offsetLeft;deck.style.scrollBehavior=''});
