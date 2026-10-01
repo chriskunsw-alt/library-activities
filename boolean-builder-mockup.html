@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build a Boolean search (mock-up) | UNSW Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>:root{
+  --bg:#ffffff; --ink:#000000; --muted:#555555; --line:#e2e2e2; --panel:#f5f5f3;
+  --yellow:#ffe000; --soft:#fff6b8; --on-yellow:#000000;
+  --good:#1d7a3a; --bad:#b3261e; --focus:#1a5fd1;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161616; --ink:#f3f3f3; --muted:#b5b5b5; --line:#343434; --panel:#202020;
+    --soft:#3b3510; --good:#6fd08f; --bad:#ff8a80; --focus:#8ab4ff;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161616; --ink:#f3f3f3; --muted:#b5b5b5; --line:#343434; --panel:#202020;
+  --soft:#3b3510; --good:#6fd08f; --bad:#ff8a80; --focus:#8ab4ff;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Lexend",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:300;line-height:1.6;font-size:17px}
+body::after{content:"";position:fixed;top:0;right:0;width:clamp(0px,4vw,56px);height:100%;background:var(--yellow);z-index:0;pointer-events:none}
+@media (max-width:720px){body::after{display:none}}
+strong,b{font-weight:500}
+a{color:inherit;text-decoration-color:var(--yellow);text-decoration-thickness:3px;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+@media (min-width:721px){.wrap{padding-right:calc(24px + 4vw)}}
+.bar{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.bar .wrap{display:flex;align-items:center;gap:16px;min-height:60px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:15px;white-space:nowrap}
+.nav{display:flex;gap:4px;overflow-x:auto;flex:1;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{text-decoration:none;font-size:14px;padding:6px 10px;border-radius:6px;white-space:nowrap;font-weight:400}
+.nav a:hover{background:var(--panel)}
+.nav a .n{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--yellow);color:var(--on-yellow);font-size:12px;font-weight:700;margin-right:6px}
+.hero{padding:56px 0 24px}
+.hero h1{font-size:clamp(38px,6.5vw,70px);line-height:1.04;font-weight:700;letter-spacing:-.02em;margin:0 0 18px;max-width:16ch}
+.hero h1::after{content:"";display:block;width:110px;height:8px;background:var(--yellow);margin-top:18px}
+.hero p{max-width:62ch;font-size:19px;margin:0 0 10px}
+.hero .sub{color:var(--muted);font-size:16px}
+section{padding:56px 0;border-top:1px solid var(--line)}
+.sec-head{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;margin-bottom:22px}
+.big-n{width:54px;height:54px;border-radius:50%;background:var(--yellow);color:var(--on-yellow);display:grid;place-items:center;font-weight:700;font-size:26px}
+h2{font-size:clamp(28px,4vw,40px);line-height:1.1;margin:4px 0 8px;font-weight:700;letter-spacing:-.01em}
+h3{font-size:21px;margin:34px 0 10px;font-weight:500}
+.lead{max-width:64ch;margin:0}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+p{max-width:68ch}
+.tip{display:flex;gap:14px;align-items:flex-start;background:var(--soft);border-radius:12px;padding:14px 18px;margin:18px 0;max-width:760px}
+.tip .ic{flex:none;width:30px;height:30px;border-radius:50%;background:var(--yellow);color:var(--on-yellow);display:grid;place-items:center;font-weight:700}
+.tip p{margin:0}
+.btn{font:inherit;font-weight:500;font-size:15px;padding:9px 16px;border-radius:8px;border:2px solid var(--yellow);background:var(--yellow);color:var(--on-yellow);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.panel{background:var(--panel);border-radius:18px;padding:22px;margin-top:14px}
+.status{margin:12px 0 0;font-weight:500;min-height:1.6em}
+/* sorter */
+.pool{display:flex;flex-wrap:wrap;gap:8px;min-height:56px;padding:10px;border:2px dashed var(--muted);border-radius:12px;margin-bottom:16px;background:var(--bg)}
+.pool:empty::before{content:"All cards placed. Select Check answers.";color:var(--muted);font-size:15px;padding:6px}
+.card{font:inherit;font-weight:400;font-size:15px;line-height:1.4;padding:8px 12px;border-radius:8px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);cursor:grab;text-align:left;touch-action:manipulation}
+.card[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:#000}
+.card.ok{border-color:var(--good);box-shadow:inset 6px 0 0 var(--good)}
+.card.no{border-color:var(--bad);box-shadow:inset 6px 0 0 var(--bad)}
+.bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.bin{border:2px solid var(--ink);border-radius:12px;background:var(--bg);min-height:130px;display:flex;flex-direction:column;cursor:pointer}
+.bin.over{background:var(--soft)}
+.bin .bh{font:inherit;font-weight:700;font-size:16px;text-align:left;border:0;border-bottom:2px solid var(--ink);background:transparent;color:var(--ink);padding:10px 12px;cursor:pointer}
+.bin .bh small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
+.bin .bc{padding:10px;display:flex;flex-direction:column;gap:6px;flex:1}
+.why{list-style:none;padding:0;margin:14px 0 0;max-width:760px}
+.why li{padding:10px 0;border-top:1px solid var(--line);font-size:15px}
+.why li b{font-weight:700}
+.v.ok{color:var(--good);font-weight:700}.v.no{color:var(--bad);font-weight:700}
+/* questions */
+.q{background:var(--panel);border-radius:14px;padding:18px 20px;margin-top:12px;max-width:820px}
+.q .qt{font-weight:500;font-size:18px;margin:0 0 12px}
+.choices{display:flex;gap:8px;flex-wrap:wrap}
+.choice{font:inherit;font-weight:500;font-size:15px;padding:9px 16px;border-radius:10px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}
+.choice:disabled{cursor:default;opacity:.5}
+.choice.right{background:var(--good);color:#fff;border-color:var(--good);opacity:1}
+.choice.wrong{border-color:var(--bad);opacity:1}
+.fb{margin:12px 0 0;min-height:0}
+/* inputs */
+label.f{display:block;font-weight:500;font-size:15px;margin-bottom:4px}
+input[type=text],textarea{width:100%;font:inherit;font-weight:400;padding:10px 12px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+input[type=text]:focus,textarea:focus{border-color:var(--ink);outline:none}
+.out{margin:14px 0;border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+.out .hd{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;background:var(--ink);color:var(--bg);font-size:14px;font-weight:500;flex-wrap:wrap}
+.out code{display:block;padding:14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;overflow-x:auto;white-space:pre-wrap;word-break:break-word;background:var(--bg)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:14px}
+.cols > div{border-left:4px solid var(--yellow);padding:4px 0 4px 14px}
+.cols h4{margin:0 0 4px;font-size:17px;font-weight:700}
+.cols p{margin:0;font-size:15px}
+.reflect{border:2px solid var(--ink);border-radius:14px;padding:18px 20px;margin-top:18px;max-width:820px}
+.reflect h3{margin-top:0}
+.reflect ol{margin:0;padding-left:1.2em}
+.reflect li{margin:6px 0}
+footer{padding:40px 0 60px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.sr{position:absolute;left:-9999px}
+/* boolean builder */
+.bb{background:var(--bg);border:2px solid var(--ink);border-radius:12px;padding:14px}
+.bb .simhd{font-weight:700;font-size:16px;margin:0 0 2px}.bb .simsub{font-size:13px;color:var(--muted);margin:0 0 10px}
+.brow{display:grid;grid-template-columns:62px minmax(0,1fr);gap:8px;align-items:stretch;margin-bottom:8px}
+.brow .op{font-weight:700;font-size:13px;display:grid;place-items:center;border:2px solid var(--line);border-radius:6px;background:var(--panel)}
+.bzone{border:2px dashed var(--line);border-radius:8px;padding:6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:48px;cursor:pointer}
+.brow.active .bzone{border-color:var(--ink);border-style:solid;background:var(--soft)}
+.bzone input{flex:1;min-width:150px;border:0;background:transparent;font:inherit;font-size:14px;padding:6px;color:var(--ink)}
+.bzone input:focus{outline:2px solid var(--focus);border-radius:4px}
+.orl{font-size:12px;font-weight:700;color:var(--muted)}
+.cap{display:inline-flex;align-items:center;border:2px solid var(--ink);border-radius:999px;background:var(--bg);font-size:14px;overflow:hidden}
+.cap .ct{font:inherit;border:0;background:transparent;color:var(--ink);padding:4px 10px;cursor:pointer;font-family:ui-monospace,Menlo,Consolas,monospace}
+.cap .ct[aria-expanded="true"]{background:var(--yellow);color:#000}
+.cap .cx{font:inherit;border:0;border-left:1px solid var(--line);background:transparent;color:var(--muted);padding:4px 8px;cursor:pointer}
+.capmenu{width:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--panel);border-radius:8px;padding:6px 8px;font-size:13px}
+.capmenu button{font:inherit;font-size:13px;border:2px solid var(--ink);background:var(--bg);color:var(--ink);border-radius:6px;padding:3px 8px;cursor:pointer}
+.capmenu button[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:#000}
+.capmenu .w8{color:var(--bad);font-weight:500}
+.tray{margin-top:12px;border-top:2px solid var(--line);padding-top:10px}
+.tray .tg{font-size:13px;font-weight:700;color:var(--muted);margin:6px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+.tray .tl{display:flex;flex-wrap:wrap;gap:6px}
+.tcap{font:inherit;font-size:14px;border:2px solid var(--ink);border-radius:999px;background:var(--soft);color:var(--ink);padding:4px 12px;cursor:pointer}
+.tcap:hover{background:var(--yellow);color:#000}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:12px 0 0}
+.legend div{background:var(--panel);border-radius:8px;padding:8px 10px;font-size:13px}
+.legend b{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;display:block}
+.nest{background:var(--soft);border-radius:8px;padding:10px 12px;margin-top:12px;font-size:14px}
+.nest p{margin:0;max-width:none}
+#bbOut .br{color:var(--bad);font-weight:700}
+.qz{max-width:1000px}
+.qzh{background-color:#ffe000;background-image:linear-gradient(100deg,#ffe000 50%,rgba(255,224,0,0) 80%),repeating-linear-gradient(-6deg,rgba(255,255,255,0) 0,rgba(255,255,255,0) 11px,#fff 11px,#fff 14px);border-radius:8px;padding:28px 30px;color:#000}
+.qzh .kick{margin:0 0 6px;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;max-width:none}
+.qzh .big{margin:0 0 8px;font-size:clamp(34px,5vw,54px);font-weight:700;line-height:1.02;max-width:none}
+.qzh .sub{margin:0;font-size:18px;max-width:none}
+.qzr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin-top:14px}
+@media (max-width:700px){.qzr{grid-template-columns:1fr}}
+.qzd{background:#111;color:#fff;border-radius:8px;padding:18px 22px}
+.qzd ul{margin:6px 0 0;padding-left:20px;font-size:16px;line-height:1.7}
+.qzw{background:#fff;color:#111;border:2px solid #111;border-radius:8px;padding:18px 22px;box-shadow:6px 6px 0 #ffe000}
+.qz .k{margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;max-width:none}
+.qzd .k{color:#ffe000}.qzw .k{color:#555}
+.qzw .t{margin:0 0 2px;font-size:19px;font-weight:700;max-width:none}
+.qzw .s{margin:0 0 12px;font-size:15px;color:#333;max-width:none}
+
+html,body{background:var(--bg)}
+body{font-size:16px}
+body::after{display:none}
+.page{padding:14px 20px 24px;max-width:1200px;margin:0 auto}
+.fs{display:flex;align-items:center;gap:12px;background:#111;color:#fff;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:15px}
+.fs b{color:var(--yellow)}.fs a{margin-left:auto;background:var(--yellow);color:#000;font-weight:700;border-radius:8px;padding:7px 14px;font-size:14px;text-decoration:none;white-space:nowrap}
+.lead{font-size:15px;margin:0 0 10px;max-width:none}
+.layout{display:grid;grid-template-columns:290px minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:820px){.layout{grid-template-columns:1fr}}
+.bank{background:var(--panel);border-radius:12px;padding:14px;position:sticky;top:8px}
+.bank h3{margin:0 0 2px;font-size:16px}
+.bank .hint2{margin:0 0 6px;font-size:13px;color:var(--muted)}
+.bank .tray{margin-top:0;border-top:0;padding-top:0}
+.bank .tcap.used{background:#111;color:var(--yellow);border-color:#111}
+.bank .own label{display:block;font-size:13px;font-weight:700;margin:12px 0 4px}
+.bank .own input{width:100%;font:inherit;font-size:14px;padding:8px 10px;border:2px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.bank .own p{margin:4px 0 0;font-size:12px;color:var(--muted)}
+.bb .simsub{margin-bottom:8px}
+.capmenu{position:relative;padding:10px 40px 10px 12px;border:2px solid #111;background:var(--bg)}
+.capmenu .mh{width:100%;font-size:13px;font-weight:700;margin:0 0 2px}
+.capmenu .cls{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;border:2px solid #111;background:var(--bg);font-size:16px;line-height:1;display:grid;place-items:center;padding:0;cursor:pointer}
+.capmenu .cls:hover{background:var(--yellow)}
+.capmenu .rm{border:0!important;background:none!important;color:var(--bad)!important;text-decoration:underline;padding:3px 4px!important}
+.capmenu button[disabled]{opacity:.45;cursor:not-allowed}
+.capmenu .na{font-size:12px;color:var(--muted)}
+.cap .cx{min-width:28px;font-size:16px}
+.cap .cx:hover{color:var(--bad)}
+.legend,.nest{margin-top:10px}
+</style></head>
+<body><div class="page">
+<div class="fs" id="fs">🖥️ <span><b>Lots to see here.</b> Open this activity full screen for the best view.</span><a id="fsl" href="#" target="_blank" rel="noopener">Open full screen ↗</a></div>
+<p class="lead">Build a search from the keyword bank. Words in the same row are joined with OR. Rows are joined with AND.</p>
+<div class="layout">
+<aside class="bank" aria-labelledby="bankh"><h3 id="bankh">Keyword bank</h3><p class="hint2">Select a word to add it to the highlighted row.</p><div class="tray" id="tray"></div>
+<div class="own"><label for="ownin">Add your own word</label><input type="text" id="ownin" placeholder="Type a word, then press Enter"><p>It goes into the highlighted row.</p></div></aside>
+<div class="bb" id="bb"></div>
+</div></div>
+<script>
+const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function copyText(t,btn){let ok=false;try{await navigator.clipboard.writeText(t);ok=true}catch(e){}if(btn){const o=btn.textContent;btn.textContent=ok?'Copied':'Copy failed';setTimeout(()=>btn.textContent=o,1500)}}
+$('#fsl').href=location.href;
+const PROXY='https://wwwproxy1.library.unsw.edu.au/login?url=';
+const EBSCO='https://research.ebsco.com/c/cqb6z7/search/results?autocorrect=y&db=buh&expanders=concept&searchMode=enhanced&q=';
+const TRAY=[['The issue',['modern slavery','forced labour','human rights','greenwashing','climate change']],['Who',['company','corporation','organisation','multinational']],['Reporting',['sustainability reporting','non-financial reporting','disclosure']],['Responsibility',['corporate social responsibility','CSR','ESG']]];
+const ROOT={sustainability:'sustainab',reporting:'report',disclosure:'disclos',company:'compan',corporation:'corporat',organisation:'organi?ation',multinational:'multinational',responsibility:'responsib',rights:'right',labour:'labo#r'};
+const SPELL={organisation:'organi?ation',labour:'labo#r'};
+let rows=[[],[],[]],active=0,open=null;const bb=$('#bb');
+const mk=t=>({t,ph:/\s/.test(t.trim()),tr:false,wc:false});
+const spellable=t=>t.toLowerCase().split(/\s+/).some(w=>SPELL[w]);
+function fmt(o){let w=o.t.trim().split(/\s+/);if(o.wc)w=w.map(x=>SPELL[x.toLowerCase()]||x);if(o.tr){const l=w.length-1,lw=w[l].toLowerCase();let r=ROOT[lw]||w[l];if(o.wc&&SPELL[lw]&&!ROOT[lw])r=SPELL[lw];w[l]=r+'*'}let s=w.join(' ');if(o.ph&&w.length>1)s='"'+s+'"';return s}
+function warn(o){if(!o.tr)return '';const w=fmt(o).replace(/"/g,'').split(' ').pop();return w.split(/[*?#]/)[0].length<3?'Needs at least 3 letters before the *.':''}
+function build(h){const g=rows.map(r=>r.map(fmt)).filter(r=>r.length);return g.map(r=>r.length>1?(h?'<span class="br">(</span>':'(')+r.map(x=>h?esc(x):x).join(' OR ')+(h?'<span class="br">)</span>':')'):(h?esc(r[0]):r[0])).join(' AND ')}
+function used(t){return rows.some(r=>r.some(o=>o.t.toLowerCase()===t.toLowerCase()))}
+function drawTray(){$('#tray').innerHTML=TRAY.map(g=>`<p class="tg">${g[0]}</p><div class="tl">${g[1].map(t=>`<button class="tcap ${used(t)?'used':''}" type="button" data-t="${esc(t)}" aria-pressed="${used(t)}">${used(t)?'✓ ':'+ '}${esc(t)}</button>`).join('')}</div>`).join('')}
+function menu(i,k){const o=rows[i][k],multi=/\s/.test(o.t.trim()),w=warn(o),sp=spellable(o.t);
+ return `<div class="capmenu" role="dialog" aria-label="Options for ${esc(o.t)}"><p class="mh">Options for “${esc(o.t)}”</p>
+ <button class="cls" type="button" data-close aria-label="Close options" title="Close options">×</button>
+ <button type="button" data-opt="ph" aria-pressed="${o.ph}" ${multi?'':'disabled'}>“ ” Exact phrase</button>
+ <button type="button" data-opt="tr" aria-pressed="${o.tr}">* Word endings</button>
+ <button type="button" data-opt="wc" aria-pressed="${o.wc}" ${sp?'':'disabled'}>? # Both spellings</button>
+ <button type="button" class="rm" data-remove>Remove word</button>
+ ${!multi||!sp?`<span class="na">${[!multi?'Exact phrase: one word only':'',!sp?'Both spellings: not needed here':''].filter(Boolean).join(' · ')}</span>`:''}
+ ${w?`<span class="w8">${w}</span>`:''}${multi&&!o.ph?'<span class="w8">Without quotes, the words can appear anywhere.</span>':''}</div>`}
+function draw(focusSel){bb.innerHTML=`<p class="simhd">Build your search</p><p class="simsub">Practice search screen · Business Source Premier · Select a row, then add words from the keyword bank</p>
+${rows.map((r,i)=>`<div class="brow ${i===active?'active':''}"><span class="op">${i?'AND':'Find'}</span><div class="bzone" data-row="${i}" role="group" aria-label="Row ${i+1}${i===active?' (selected)':''}" tabindex="0">${r.map((o,k)=>`${k?'<span class="orl" aria-hidden="true">OR</span>':''}<span class="cap"><button class="ct" type="button" data-r="${i}" data-k="${k}" aria-expanded="${!!(open&&open[0]===i&&open[1]===k)}" aria-label="${esc(fmt(o))}, options">${esc(fmt(o))}</button><button class="cx" type="button" data-rx="${i}" data-k="${k}" aria-label="Remove ${esc(o.t)}" title="Remove">×</button></span>`).join('')}
+${r.length?'':'<span class="ph" style="color:var(--muted);font-size:14px;padding:4px 6px">'+(i===active?'Add words from the keyword bank':'Select to make this the highlighted row')+'</span>'}
+${open&&open[0]===i&&rows[i][open[1]]?menu(i,open[1]):''}</div></div>`).join('')}
+<div class="out" style="margin:10px 0 0"><div class="hd"><span>Your search</span><span><button class="btn ghost" type="button" id="bbCopy" style="padding:3px 10px;font-size:13px;background:var(--bg)">Copy</button> <button class="btn ghost" type="button" id="bbClr" style="padding:3px 10px;font-size:13px;background:var(--bg)">Clear</button> <button class="btn ghost" type="button" id="bbEx" style="padding:3px 10px;font-size:13px;background:var(--bg)">Load example</button></span></div><code id="bbOut">${build(true)||'Add words to start.'}</code></div>
+<div class="actions"><a class="btn" id="bbGo" href="#" target="_blank" rel="noopener">View in Business Source Premier</a><span class="status" id="bbSt" aria-live="polite" style="margin:0"></span></div>
+<div class="legend"><div><b>"supply chain"</b>Quotation marks keep words together as a phrase.</div><div><b>environment*</b>Finds endings: environmental, environmentally. Needs 3+ letters before *.</div><div><b>organi?ation</b>? replaces one letter: organisation, organization.</div><div><b>labo#r</b># allows one optional letter: labor, labour.</div></div>
+<div class="nest"><p><b>Why the red brackets?</b> When a row has several ORs, brackets keep those words together, so the database reads “any of these” AND “any of those”. Many databases nest each row for you.</p></div>`;
+ bind();drawTray();const q=build(false),a=$('#bbGo');if(q){a.href=PROXY+EBSCO+encodeURIComponent(q).replace(/%20/g,'+');a.style.pointerEvents='';a.removeAttribute('aria-disabled')}else{a.href='#';a.style.pointerEvents='none';a.setAttribute('aria-disabled','true')}
+ if(focusSel){const el=bb.querySelector(focusSel);if(el)el.focus()}}
+function say(t){const s=$('#bbSt');if(s)s.textContent=t}
+function add(t){t=t.trim().replace(/^"|"$/g,'');if(!t)return;if(rows[active].some(o=>o.t.toLowerCase()===t.toLowerCase())){say(`${t} is already in row ${active+1}.`);return}rows[active].push(mk(t));open=null;draw();say(`Added ${t} to row ${active+1}.`)}
+function closeMenu(){if(!open)return;const [i,k]=open;open=null;draw(`.ct[data-r="${i}"][data-k="${k}"]`)}
+function bind(){
+ bb.querySelectorAll('.bzone').forEach(z=>{z.addEventListener('click',e=>{if(e.target===z||e.target.classList.contains('ph')){active=+z.dataset.row;open=null;draw();say(`Row ${active+1} selected.`)}});z.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target===z){e.preventDefault();active=+z.dataset.row;draw(`.bzone[data-row="${active}"]`)}})});
+ bb.querySelectorAll('.ct').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.r,k=+b.dataset.k;open=(open&&open[0]===i&&open[1]===k)?null:[i,k];active=i;draw(open?'[data-close]':`.ct[data-r="${i}"][data-k="${k}"]`)}));
+ bb.querySelectorAll('.cx').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.rx,k=+b.dataset.k,t=rows[i][k].t;rows[i].splice(k,1);open=null;draw(`.bzone[data-row="${i}"]`);say(`Removed ${t}.`)}));
+ bb.querySelectorAll('[data-opt]').forEach(b=>b.addEventListener('click',()=>{const o=rows[open[0]][open[1]];o[b.dataset.opt]=!o[b.dataset.opt];draw(`[data-opt="${b.dataset.opt}"]`)}));
+ const cl=bb.querySelector('[data-close]');if(cl)cl.addEventListener('click',closeMenu);
+ const rm=bb.querySelector('[data-remove]');if(rm)rm.addEventListener('click',()=>{const [i,k]=open,t=rows[i][k].t;rows[i].splice(k,1);open=null;draw(`.bzone[data-row="${i}"]`);say(`Removed ${t}.`)});
+ $('#bbCopy').addEventListener('click',e=>copyText(build(false),e.target));
+ $('#bbClr').addEventListener('click',()=>{rows=[[],[],[]];active=0;open=null;draw();say('Cleared.')});
+ $('#bbEx').addEventListener('click',()=>{rows=[[mk('modern slavery'),{...mk('forced labour'),wc:true}],[{...mk('company'),tr:true},{...mk('corporation'),tr:true},{...mk('organisation'),wc:true}],[{...mk('disclosure'),tr:true},mk('sustainability reporting')]];open=null;draw();say('Example loaded. Select any word to change its options.')})}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)closeMenu()});
+$('#tray').addEventListener('click',e=>{const b=e.target.closest('.tcap');if(!b)return;if(used(b.dataset.t)){say(`${b.dataset.t} is already in your search. Select it in the search to change or remove it.`);return}add(b.dataset.t);const nb=$(`.tcap[data-t="${CSS.escape(b.dataset.t)}"]`);if(nb)nb.focus()});
+$('#ownin').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===','){e.preventDefault();add($('#ownin').value);$('#ownin').value=''}});
+draw();
+</script></body></html>
